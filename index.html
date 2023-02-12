@@ -1,13 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + TS</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.ts"></script>
-  </body>
+<head>
+    <meta charset="UTF-8"/>
+    <link rel="icon" type="image/svg+xml" href="/vite.svg"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Treqster</title>
+</head>
+<body>
+<div class="container" x-data="app">
+    <div class="row justify-content-center">
+        <div class="col-lg-10 col-xl-8">
+            <div class="py-5 ">
+              <form class="row" @submit.prevent="getRoutes">
+                <!-- Maps -->
+                <div class="col-6 mb-4">
+                  <h5>Origin</h5>
+                  <div x-ref="origin" class="map"></div>
+                  <div class="row mt-2">
+                    <div class="col-6"><input x-model="points[0][0]" class="form-control" readonly></div>
+                    <div class="col-6"><input x-model="points[0][1]" class="form-control" readonly></div>
+                  </div>
+                </div>
+                <div class="col-6 mb-4">
+                  <h5>Destination</h5>
+                  <div x-ref="dest" class="map"></div>
+                  <div class="row mt-2">
+                    <div class="col-6"><input x-model="points[1][0]" class="form-control" readonly></div>
+                    <div class="col-6"><input x-model="points[1][1]" class="form-control" readonly></div>
+                  </div>
+                </div>
+
+                <!-- Transportation modes -->
+                <div class="col-12 mb-4">
+                  <template x-for="mode in ['foot', 'car', 'bicycle']" :key="mode">
+                    <div class="form-check form-check-inline" x-id="['mode']">
+                      <input :id="$id('mode')" class="form-check-input" type="checkbox" x-model="transportationModes" :value="mode">
+                      <label class="form-check-label" :for="$id('mode')" x-text="upperFirst(mode)"></label>
+                    </div>
+                  </template>
+                </div>
+
+                <!-- Alternatives -->
+                <div class="col-12 mb-4">
+                  <label for="alternatives">Alternatives (<strong x-text="alternatives"></strong>)</label>
+                  <input x-model="alternatives" type="range" min="1" max="10" step="1" class="form-control-range w-100" id="alternatives">
+                </div>
+
+                <div class="col-12">
+                  <button class="btn btn-lg btn-primary" :disabled="loading">Submit</button>
+                </div>
+              </form>
+
+              <!-- Loading -->
+              <div class="text-center" x-show="loading">
+                <div class="spinner-border my-3 mx-auto" role="status"></div>
+              </div>
+
+              <!-- Routes -->
+              <template x-if="loading === false && routes.length > 0">
+                <div class="mt-4">
+                  <h4>Routes</h4>
+                  <div class="list-group">
+                    <template x-for="item in routes" :key="item.encodedGeometry">
+                      <div class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between align-items-center">
+                          <h5 class="mb-1" x-text="formatDistance(item.totalDistance)"></h5>
+                          <div>
+                            <small x-text="formatTime(item.totalTime)"></small>
+                            <span class="badge bg-success text-uppercase" x-text="item.transportationMode"></span>
+                          </div>
+                        </div>
+                      </div>
+                    </template>
+                  </div>
+                </div>
+              </template>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="module" src="/src/main.ts"></script>
+</body>
 </html>
