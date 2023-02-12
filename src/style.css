@@ -2,5 +2,5 @@
 @import 'leaflet/dist/leaflet.css';
 
 .map {
-  height: 180px;
+  height: 300px;
 }
