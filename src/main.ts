@@ -61,6 +61,11 @@ Alpine.data('app', function () {
     destMap: null,
     destMarker: null,
 
+    // Computed
+    get disabled() {
+      return this.transportationModes.length === 0;
+    },
+
     // Methods
     async getRoutes() {
       const { points, transportationModes, alternatives } = this;
